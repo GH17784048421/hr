@@ -94,11 +94,48 @@
 //   mutations,
 //   actions
 // }
+import { setToken, getToken, removeToken } from '@/utils/auth'
+import { login, getUserInfo } from '@/api/user'
+const state = {
+  token: getToken(),
+  userInfo: {}
+}
+const mutations = {
+  // token
+  setToken(state, token) {
+    state.token = token
+    setToken(token)
+  },
+  removeToken(state) {
+    state.token = null
+    removeToken()
+  },
+  // userInfo
+  setUserInfo(state, userInfo) {
+    state.userInfo = userInfo
+  },
+  removeUserInfo(state) {
+    state.userInfo = {}
+  }
+}
+const actions = {
+  async login(context, data) {
+    const result = await login(data)
+    console.log(result)
+
+    context.commit('setToken', result)
+  },
+  async getUserInfo(context) {
+    const result = await getUserInfo()
+    console.log(result)
+    context.commit('setUserInfo', result)
+    return result // 做权限留伏笔
+  }
+}
 
 export default {
   namespaced: true,
-  state: {},
-  mutations: {},
-  actions: {}
-
+  state,
+  mutations,
+  actions
 }
