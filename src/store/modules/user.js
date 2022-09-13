@@ -94,8 +94,8 @@
 //   mutations,
 //   actions
 // }
-import { setToken, getToken, removeToken } from '@/utils/auth'
-import { login, getUserInfo } from '@/api/user'
+import { setToken, getToken, removeToken, setTimeStamp } from '@/utils/auth'
+import { login, getUserInfo, getUserDetailById } from '@/api/user'
 const state = {
   token: getToken(),
   userInfo: {}
@@ -124,12 +124,19 @@ const actions = {
     console.log(result)
 
     context.commit('setToken', result)
+    setTimeStamp()
   },
   async getUserInfo(context) {
     const result = await getUserInfo()
+    const baseInfo = await getUserDetailById(result.userId)
     console.log(result)
-    context.commit('setUserInfo', result)
+    const baseResult = { ...result, ...baseInfo }
+    context.commit('setUserInfo', baseResult)
     return result // 做权限留伏笔
+  },
+  async logout(context) {
+    context.commit('removeToken')
+    context.commit('removeUserInfo')
   }
 }
 

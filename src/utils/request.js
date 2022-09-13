@@ -87,6 +87,9 @@
 import axios from 'axios'
 import { Message } from 'element-ui'
 import store from '@/store'
+import { getTimeStamp } from '@/utils/auth'
+import router from '@/router'
+const TimeOut = 36000
 // import router from '@/router'
 const service = axios.create(
   {
@@ -97,7 +100,13 @@ const service = axios.create(
 service.interceptors.request.use(
   config => {
     if (store.getters.token) {
-      config.headers['Authorization'] = `Bearer ${store.getters.token}`
+      if (isCheckTimeOut()) {
+        store.dispatch('user/logout')
+        router.push('/login')
+        return Promise.reject(new Error('token超时'))
+      } else {
+        config.headers['Authorization'] = `Bearer ${store.getters.token}`
+      }
     }
     return config
   }, err => {
@@ -115,9 +124,18 @@ service.interceptors.response.use(
       return Promise.reject(new Error(message))
     }
   }, err => {
-    Message.error(err.message)
+    if (err.response && err.response.data && err.response.data.code === 10002) {
+      store.dispatch('user/logout')
+      router.push('/login')
+    } else { Message.error(err.message) }
     return Promise.reject(err)
   }
+
 )
+function isCheckTimeOut() {
+  var currentTime = Date.now()
+  var timeStamp = getTimeStamp()
+  return (currentTime - timeStamp) > TimeOut
+}
 export default service
 

@@ -67,6 +67,7 @@ import store from '@/store'
 import router from '@/router'
 import NProgress from 'nprogress' // 引入一份进度条插件
 import 'nprogress/nprogress.css' // 引入进度条样式
+
 const whiteList = ['/login', '/404']
 router.beforeEach(async (to, from, next) => {
   NProgress.start()
