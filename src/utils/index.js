@@ -117,11 +117,11 @@ export function param2Obj(url) {
 }
 
 // 树形结果
-export function tranListToTreeData(list, rootValue) {
+export function transListToTreeData(list, rootValue) {
   var arr = []
   list.forEach(item => {
     if (item.pid === rootValue) {
-      const children = tranListToTreeData(list, item.id)
+      const children = transListToTreeData(list, item.id)
       if (children.length) {
         item.children = children
       }

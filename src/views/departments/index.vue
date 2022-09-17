@@ -12,7 +12,7 @@
 <script>
 import TreeTools from './components/tree-tools.vue'
 import { getDepartments } from '@/api/departments'
-import { tranListToTreeData } from '@/utils/index'
+import { transListToTreeData } from '@/utils/index'
 import addDept from '@/views/departments/components/add-dept.vue'
 
 export default {
@@ -43,7 +43,7 @@ export default {
       const result = await getDepartments()
 
       this.company = { name: result.companyName, manager: '负责人', id: '' }
-      this.departs = tranListToTreeData(result.depts, '')
+      this.departs = transListToTreeData(result.depts, '')
       this.loading = false
     },
     addDepts(node) {
